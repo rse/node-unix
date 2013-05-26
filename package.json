@@ -1,0 +1,39 @@
+{
+    "name":        "node-unix",
+    "homepage":    "http://github.com/rse/node-unix",
+    "description": "Unix operating system integration for Node-based services",
+    "version":     "0.9.0",
+    "license":     "MIT",
+    "author": {
+        "name":    "Ralf S. Engelschall",
+        "email":   "rse@engelschall.com",
+        "url":     "http://engelschall.com"
+    },
+    "keywords": [
+        "unix", "daemon", "service"
+    ],
+    "repository": {
+        "type": "git",
+        "url":  "git://github.com/rse/node-unix.git"
+    },
+    "bugs": {
+        "url":  "http://github.com/rse/node-unix/issues"
+    },
+    "bin": {
+        "node-unix-daemon": "./node-unix-daemon.js"
+    },
+    "main": "./node-unix.js",
+    "dependencies" : {
+        "optimist": "*",
+        "daemonize.redux": "*",
+        "shelly": "*",
+        "sh": "*"
+    },
+    "engines": {
+        "node": ">=0.10.0"
+    },
+    "os": [
+        "linux",
+        "freebsd"
+    ]
+}
