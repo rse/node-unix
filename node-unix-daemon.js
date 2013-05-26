@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 /*
 **  node-unix -- Unix operating system integration for Node-based services
 **  Copyright (c) 2013 Ralf S. Engelschall <rse@engelschall.com>
