@@ -22,6 +22,7 @@
 **  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
+/*  load required modules  */
 var fs           = require("fs");
 var os           = require("os");
 var path         = require("path");
@@ -30,11 +31,15 @@ var util         = require("util");
 var sh           = require("sh");
 var shelly       = require("shelly");
 var EventEmitter = require("events").EventEmitter;
-var wrapper      = path.resolve(path.join(__dirname, "./node-unix-daemon.js"));
 
+/*  determine path to wrapper script  */
+var wrapper = path.resolve(path.join(__dirname, "./node-unix-daemon.js"));
+
+/*  make sure we are executed under supported platforms only  */
 if (!(os.platform() === "linux" || os.platform() === "freebsd"))
     throw new Error("node-unix supported under Linux and FreeBSD only (you have \"" + os.platform() + "\")");
 
+/*  define the service class constructor  */
 var Service = function (config) {
     EventEmitter.call(this);
 	Object.defineProperties(this, {
@@ -82,7 +87,11 @@ var Service = function (config) {
         }
     });
 };
+
+/*  add EventEmitter functionality to service class  */
 util.inherits(Service, EventEmitter);
+
+/*  define the service class methods  */
 Service.prototype.install = function (cb) {
     return this.platform[os.platform()](this, "install", cb);
 };
@@ -104,6 +113,8 @@ Service.prototype.restart = function (cb) {
         self.start(cb);
     });
 };
+
+/*  define the platform specific functionality  */
 Service.prototype.platform = {
     linux: function (self, command, cb) {
         /*  determine path to rc script  */
@@ -122,7 +133,9 @@ Service.prototype.platform = {
         var outfile = util.format("/var/log/%s-out.log", self.name);
         var errfile = util.format("/var/log/%s-err.log", self.name);
 
+        var cmd;
         if (command === "install") {
+            /*  install rc script  */
             if (fs.existsSync(rcscript)) {
                 self.emit("alreadyinstalled");
                 return;
@@ -165,12 +178,12 @@ Service.prototype.platform = {
                 "esac\n",
                 { encoding: "utf8" }
             );
-            var cmd = shelly("chmod 755 ?", rcscript)
+            cmd = shelly("chmod 755 ?", rcscript);
             if (fs.existsSync("/sbin/insserv"))
-                cmd += shelly(" && /sbin/insserv ?", self.name)
+                cmd += shelly(" && /sbin/insserv ?", self.name);
             else if (fs.existsSync("/sbin/chkconfig")) {
-                cmd += shelly(" && /sbin/chkconfig --add ?", self.name)
-                cmd += shelly(" && /sbin/chkconfig ? on", self.name)
+                cmd += shelly(" && /sbin/chkconfig --add ?", self.name);
+                cmd += shelly(" && /sbin/chkconfig ? on", self.name);
             }
             sh(cmd, function () {
                 this.and(function () {
@@ -179,10 +192,11 @@ Service.prototype.platform = {
                 this.or(function () {
                     self.emit("error", "failed to execute: " + cmd);
                 });
-            })
+            });
         }
         else if (command === "uninstall") {
-            var cmd = shelly("? stop >/dev/null 2>&1 || true", rcscript);
+            /*  uninstall rc script and cleanup  */
+            cmd = shelly("? stop >/dev/null 2>&1 || true", rcscript);
             if (fs.existsSync("/sbin/insserv"))
                 cmd += shelly(" && /sbin/insserv -r ?", self.name);
             else if (fs.existsSync("/sbin/chkconfig")) {
@@ -200,23 +214,26 @@ Service.prototype.platform = {
             });
         }
         else if (command === "installed") {
+            /*  check whether rc-script exists  */
             return fs.existsSync(rcscript);
         }
         else if (command === "start") {
+            /*  perform the rc-script start action  */
             exec(shelly("? start", rcscript), function (error, stdout, stderr) {
                 if (error !== null)
                     self.emit("error", stderr);
                 else
                     self.emit("start");
-            })
+            });
         }
         else if (command === "stop") {
+            /*  perform the rc-script stop action  */
             exec(shelly("? stop", rcscript), function (error, stdout, stderr) {
                 if (error !== null)
                     self.emit("error", stderr);
                 else
                     self.emit("stop");
-            })
+            });
         }
     },
     freebsd: function (self, command, cb) {
@@ -236,7 +253,9 @@ Service.prototype.platform = {
         var outfile = util.format("/var/log/%s-out.log", self.name);
         var errfile = util.format("/var/log/%s-err.log", self.name);
 
+        var cmd;
         if (command === "install") {
+            /*  install rc script  */
             if (fs.existsSync(rcscript)) {
                 self.emit("alreadyinstalled");
                 return;
@@ -271,8 +290,8 @@ Service.prototype.platform = {
                 "load_rc_config $name\n" +
                 "run_rc_command \"$1\"\n",
                 { encoding: "utf8" }
-            )
-            var cmd = shelly("chmod 755 ?", rcscript);
+            );
+            cmd = shelly("chmod 755 ?", rcscript);
             sh(cmd, function () {
                 this.and(function () {
                     self.emit("install");
@@ -280,10 +299,11 @@ Service.prototype.platform = {
                 this.or(function () {
                     self.emit("error", "failed to execute: " + cmd);
                 });
-            })
+            });
         }
         else if (command === "uninstall") {
-            var cmd = shelly("? stop >/dev/null 2>&1 || true", rcscript);
+            /*  uninstall rc script and cleanup  */
+            cmd = shelly("? stop >/dev/null 2>&1 || true", rcscript);
             cmd += shelly(" && rm -f ? ? ? ? >/dev/null 2>&1 || true", rcscript, pidfile, outfile, errfile);
             console.log(cmd);
             sh(cmd, function () {
@@ -296,9 +316,11 @@ Service.prototype.platform = {
             });
         }
         else if (command === "installed") {
+            /*  check whether rc-script exists  */
             return fs.existsSync(rcscript);
         }
         else if (command === "start") {
+            /*  perform the rc-script start action  */
             if (!fs.existsSync(rcscript)) {
                 self.emit("invalidinstallation");
                 return;
@@ -308,9 +330,10 @@ Service.prototype.platform = {
                     self.emit("error", stderr);
                 else
                     self.emit("start");
-            })
+            });
         }
         else if (command === "stop") {
+            /*  perform the rc-script stop action  */
             if (!fs.existsSync(rcscript)) {
                 self.emit("invalidinstallation");
                 return;
@@ -320,10 +343,11 @@ Service.prototype.platform = {
                     self.emit("error", stderr);
                 else
                     self.emit("stop");
-            })
+            });
         }
     }
 };
 
+/*  export service class  */
 module.exports.Service = Service;
 

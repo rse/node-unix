@@ -65,29 +65,29 @@ var daemon = daemonize.setup({
     stopTimeout: argv.t,
     argv:        argv._,
     silent:      true
-})
+});
 
 /*  react on certain emitted events  */
 daemon.on("started", function () {
     console.log(util.format("%s: OK: started", argv.n));
     process.exit(0);
-})
+});
 daemon.on("running", function () {
     console.log(util.format("%s: ERROR: cannot start -- already running", argv.n));
     process.exit(1);
-})
+});
 daemon.on("stopped", function () {
     console.log(util.format("%s: OK: stopped", argv.n));
     process.exit(0);
-})
+});
 daemon.on("notrunning", function () {
     console.log(util.format("%s: ERROR: cannot stop -- not running", argv.n));
     process.exit(1);
-})
+});
 daemon.on("error", function (error) {
     console.log(util.format("%s: ERROR: %s", argv.n, error));
     process.exit(1);
-})
+});
 
 /*  dispatch action according to given command  */
 switch (argv._[0]) {
@@ -98,9 +98,9 @@ switch (argv._[0]) {
         daemon.stop();
         break;
     case "status":
-        var status = daemon.status() > 0 ? "running" : "not running"
+        var status = daemon.status() > 0 ? "running" : "not running";
         console.log(util.format("%s: OK: status: %s", argv.n, status));
-        process.exit(status === "running" ? 0 : 1)
+        process.exit(status === "running" ? 0 : 1);
         break;
     default:
         console.log(util.format("%s: ERROR: invalid command", argv.n));
