@@ -22,6 +22,11 @@
 **  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
+/* global __dirname: true */
+/* global require: true */
+/* global module: true */
+/* global process: true */
+
 /*  load required modules  */
 var fs           = require("fs");
 var os           = require("os");
@@ -237,6 +242,8 @@ Service.prototype.platform = {
         }
     },
     freebsd: function (self, command, cb) {
+        /* jshint -W098 */
+
         /*  determine path to rc script  */
         if (!fs.existsSync("/etc/rc.d"))
             throw new Error("directory /etc/rc.d not existing");
@@ -305,7 +312,6 @@ Service.prototype.platform = {
             /*  uninstall rc script and cleanup  */
             cmd = shelly("? stop >/dev/null 2>&1 || true", rcscript);
             cmd += shelly(" && rm -f ? ? ? ? >/dev/null 2>&1 || true", rcscript, pidfile, outfile, errfile);
-            console.log(cmd);
             sh(cmd, function () {
                 this.and(function () {
                     self.emit("uninstall");

@@ -23,6 +23,10 @@
 **  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
+/* global require: true */
+/* global process: true */
+/* global console: true */
+
 /*  load required modules  */
 var fs        = require("fs");
 var path      = require("path");
@@ -31,7 +35,8 @@ var optimist  = require("optimist");
 var daemonize = require("daemonize.redux");
 
 /*  parse command-line arguments  */
-argv = optimist
+/* jshint -W024 */
+var argv = optimist
   .demand("n").alias("n", "name")
   .describe("n", "The name of the process.")
   .demand("f").alias("f", "file")
@@ -58,8 +63,8 @@ var daemon = daemonize.setup({
     main:        path.resolve(argv.f),
     pidfile:     path.resolve(argv.p),
     cwd:         path.resolve(argv.d),
-    stdout:      argv.o === "/dev/null" ? "ignore" : fs.openSync(path.resolve(argv.o), 'a'),
-    stderr:      argv.e === "/dev/null" ? "ignore" : fs.openSync(path.resolve(argv.e), 'a'),
+    stdout:      argv.o === "/dev/null" ? "ignore" : fs.openSync(path.resolve(argv.o), "a"),
+    stderr:      argv.e === "/dev/null" ? "ignore" : fs.openSync(path.resolve(argv.e), "a"),
     user:        argv.u !== "-" ? argv.u : "",
     group:       argv.g !== "-" ? argv.g : "",
     stopTimeout: argv.t,

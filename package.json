@@ -2,7 +2,7 @@
     "name":        "node-unix",
     "homepage":    "http://github.com/rse/node-unix",
     "description": "Unix operating system integration for Node-based services",
-    "version":     "0.9.0",
+    "version":     "0.9.1",
     "license":     "MIT",
     "author": {
         "name":    "Ralf S. Engelschall",
@@ -23,6 +23,12 @@
         "node-unix-daemon": "./node-unix-daemon.js"
     },
     "main": "./node-unix.js",
+    "devDependencies": {
+        "grunt":                "~0.4.1",
+        "grunt-cli":            "~0.1.9",
+        "grunt-contrib-jshint": "~0.6.0",
+        "grunt-contrib-clean":  "~0.4.1"
+    },
     "dependencies" : {
         "optimist": "*",
         "daemonize.redux": "*",
