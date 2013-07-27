@@ -4,6 +4,12 @@ node-unix
 
 Unix operating system integration for [Node.js](http://nodejs.org/)-based services
 
+<p/>
+<img src="https://nodei.co/npm/node-unix.png?downloads=true&stars=true" alt=""/>
+
+<p/>
+<img src="https://david-dm.org/rse/node-unix.png" alt=""/>
+
 Abstract
 --------
 
