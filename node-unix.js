@@ -193,6 +193,8 @@ Service.prototype.platform = {
             sh(cmd, function () {
                 this.and(function () {
                     self.emit("install");
+                    if (typeof cb === "function")
+                        cb();
                 });
                 this.or(function () {
                     self.emit("error", "failed to execute: " + cmd);
@@ -212,6 +214,8 @@ Service.prototype.platform = {
             sh(cmd, function () {
                 this.and(function () {
                     self.emit("uninstall");
+                    if (typeof cb === "function")
+                        cb();
                 });
                 this.or(function () {
                     self.emit("error", "failed to execute: " + cmd);
@@ -227,8 +231,11 @@ Service.prototype.platform = {
             exec(shelly("? start", rcscript), function (error, stdout, stderr) {
                 if (error !== null)
                     self.emit("error", stderr);
-                else
+                else {
                     self.emit("start");
+                    if (typeof cb === "function")
+                        cb();
+                }
             });
         }
         else if (command === "stop") {
@@ -236,8 +243,11 @@ Service.prototype.platform = {
             exec(shelly("? stop", rcscript), function (error, stdout, stderr) {
                 if (error !== null)
                     self.emit("error", stderr);
-                else
+                else {
                     self.emit("stop");
+                    if (typeof cb === "function")
+                        cb();
+                }
             });
         }
     },
@@ -302,6 +312,8 @@ Service.prototype.platform = {
             sh(cmd, function () {
                 this.and(function () {
                     self.emit("install");
+                    if (typeof cb === "function")
+                        cb();
                 });
                 this.or(function () {
                     self.emit("error", "failed to execute: " + cmd);
@@ -315,6 +327,8 @@ Service.prototype.platform = {
             sh(cmd, function () {
                 this.and(function () {
                     self.emit("uninstall");
+                    if (typeof cb === "function")
+                        cb();
                 });
                 this.or(function () {
                     self.emit("error", "failed to execute: " + cmd);
@@ -334,8 +348,11 @@ Service.prototype.platform = {
             exec(shelly("? start", rcscript), function (error, stdout, stderr) {
                 if (error !== null)
                     self.emit("error", stderr);
-                else
+                else {
                     self.emit("start");
+                    if (typeof cb === "function")
+                        cb();
+                }
             });
         }
         else if (command === "stop") {
@@ -347,8 +364,11 @@ Service.prototype.platform = {
             exec(shelly("? stop", rcscript), function (error, stdout, stderr) {
                 if (error !== null)
                     self.emit("error", stderr);
-                else
+                else {
                     self.emit("stop");
+                    if (typeof cb === "function")
+                        cb();
+                }
             });
         }
     }
