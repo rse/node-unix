@@ -24,10 +24,10 @@
     },
     "main": "./node-unix.js",
     "devDependencies": {
-        "grunt":                "~0.4.5",
-        "grunt-cli":            "~0.1.13",
-        "grunt-contrib-jshint": "~0.11.3",
-        "grunt-contrib-clean":  "~0.7.0"
+        "grunt":                "~1.0.1",
+        "grunt-cli":            "~1.2.0",
+        "grunt-contrib-jshint": "~1.1.0",
+        "grunt-contrib-clean":  "~1.1.0"
     },
     "dependencies" : {
         "optimist":             "~0.6.1",
