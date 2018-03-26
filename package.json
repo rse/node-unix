@@ -24,16 +24,16 @@
     },
     "main": "./node-unix.js",
     "devDependencies": {
-        "grunt":                "~1.0.1",
-        "grunt-cli":            "~1.2.0",
-        "grunt-contrib-jshint": "~1.1.0",
-        "grunt-contrib-clean":  "~1.1.0"
+        "grunt":                "1.0.1",
+        "grunt-cli":            "1.2.0",
+        "grunt-contrib-jshint": "1.1.0",
+        "grunt-contrib-clean":  "1.1.0"
     },
     "dependencies" : {
-        "optimist":             "~0.6.1",
-        "daemonize.redux":      "~0.0.1",
-        "shelly":               "~0.0.3",
-        "sh":                   "~0.0.3"
+        "optimist":             "0.6.1",
+        "daemonize.redux":      "0.0.1",
+        "shelly":               "0.0.3",
+        "sh":                   "0.0.3"
     },
     "engines": {
         "node":                 ">=0.10.0"
